@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hari Kumar M — DevOps Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0D1117;
+    --bg-raised: #131A22;
+    --line: #22303C;
+    --text: #E6EDF3;
+    --text-dim: #8B98A5;
+    --pass: #3FB950;
+    --pass-dim: #1F4A2A;
+    --amber: #D29922;
+    --accent: #58A6FF;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--pass-dim);color:var(--pass);}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
+
+  /* ===== Pipeline Nav (signature element) ===== */
+  .pipeline-nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(13,17,23,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .pipeline-track{
+    display:flex;align-items:center;
+    max-width:1000px;margin:0 auto;
+    padding:14px 24px;
+    gap:0;
+    overflow-x:auto;
+  }
+  .pipeline-brand{
+    font-family:var(--mono);font-weight:600;font-size:13px;
+    color:var(--pass);white-space:nowrap;margin-right:28px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .pipeline-brand::before{content:"●";font-size:9px;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .stage{
+    display:flex;align-items:center;white-space:nowrap;
+  }
+  .stage a{
+    font-family:var(--mono);font-size:12.5px;font-weight:500;
+    color:var(--text-dim);padding:6px 14px;border-radius:5px;
+    border:1px solid transparent;transition:all .15s ease;
+  }
+  .stage a:hover{color:var(--text);border-color:var(--line);background:var(--bg-raised);}
+  .stage-connector{width:20px;height:1px;background:var(--line);flex-shrink:0;}
+
+  /* ===== Hero ===== */
+  .hero{padding:88px 0 64px;}
+  .hero-eyebrow{
+    font-family:var(--mono);font-size:12px;color:var(--pass);
+    margin-bottom:18px;display:flex;align-items:center;gap:10px;
+  }
+  .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--pass);}
+  .terminal{
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,0.5);
+  }
+  .terminal-bar{
+    display:flex;align-items:center;gap:7px;
+    padding:11px 14px;border-bottom:1px solid var(--line);
+    background:#0A0F14;
+  }
+  .terminal-dot{width:10px;height:10px;border-radius:50%;}
+  .terminal-body{padding:26px 28px 30px;font-family:var(--mono);}
+  .terminal-line{font-size:14px;color:var(--text-dim);margin-bottom:4px;}
+  .terminal-line .prompt{color:var(--pass);}
+  .terminal-line .cmd{color:var(--text);}
+  .hero-name{
+    font-family:var(--sans);font-weight:800;
+    font-size:clamp(34px,5.5vw,52px);
+    letter-spacing:-0.02em;line-height:1.08;
+    margin:16px 0 10px;color:var(--text);
+  }
+  .hero-role{
+    font-family:var(--mono);font-size:15px;color:var(--accent);margin-bottom:18px;
+  }
+  .hero-desc{max-width:560px;color:var(--text-dim);font-size:15px;margin-bottom:22px;}
+  .hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .tag{
+    font-family:var(--mono);font-size:11.5px;color:var(--text-dim);
+    border:1px solid var(--line);padding:4px 10px;border-radius:4px;
+  }
+  .hero-links{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono);font-size:13px;font-weight:500;
+    padding:10px 18px;border-radius:6px;transition:all .15s ease;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--pass);color:#031B08;}
+  .btn-primary:hover{background:#4fd964;}
+  .btn-outline{border:1px solid var(--line);color:var(--text);}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ===== Section shared ===== */
+  section{padding:56px 0;border-top:1px solid var(--line);}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:32px;}
+  .section-num{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+  .section-title{font-size:22px;font-weight:700;letter-spacing:-0.01em;}
+
+  /* ===== Projects as pipeline-stage cards ===== */
+  .project{
+    background:var(--bg-raised);border:1px solid var(--line);
+    border-radius:8px;padding:24px 26px;margin-bottom:16px;
+    position:relative;transition:border-color .15s ease;
+  }
+  .project:hover{border-color:#324457;}
+  .project-status{
+    display:flex;align-items:center;gap:8px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--pass);
+  }
+  .project-status .sq{width:8px;height:8px;background:var(--pass);border-radius:2px;}
+  .project-status.building{color:var(--amber);}
+  .project-status.building .sq{background:var(--amber);}
+  .project-title{font-size:17px;font-weight:700;margin-bottom:8px;}
+  .project-desc{color:var(--text-dim);font-size:14px;margin-bottom:14px;}
+  .project-stack{display:flex;flex-wrap:wrap;gap:6px;}
+  .chip{
+    font-family:var(--mono);font-size:11px;color:var(--accent);
+    background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.2);
+    padding:3px 9px;border-radius:4px;
+  }
+  .project-link{
+    margin-top:14px;display:inline-block;font-family:var(--mono);
+    font-size:12px;color:var(--text-dim);border-bottom:1px solid var(--line);
+  }
+  .project-link:hover{color:var(--accent);border-color:var(--accent);}
+
+  /* ===== Skills ===== */
+  .skills-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  }
+  .skill-cell{
+    background:var(--bg-raised);padding:16px;
+  }
+  .skill-cat{font-family:var(--mono);font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+  .skill-items{font-size:13.5px;color:var(--text);}
+
+  /* ===== About / timeline ===== */
+  .timeline-item{display:flex;gap:20px;padding-bottom:22px;position:relative;}
+  .timeline-item:not(:last-child)::before{
+    content:"";position:absolute;left:5px;top:16px;bottom:0;width:1px;background:var(--line);
+  }
+  .timeline-dot{
+    width:11px;height:11px;border-radius:50%;background:var(--bg);
+    border:2px solid var(--pass);flex-shrink:0;margin-top:4px;
+  }
+  .timeline-when{font-family:var(--mono);font-size:11.5px;color:var(--pass);margin-bottom:4px;}
+  .timeline-what{font-weight:600;font-size:14.5px;margin-bottom:3px;}
+  .timeline-detail{font-size:13.5px;color:var(--text-dim);}
+
+  /* ===== Contact / footer ===== */
+  .contact-terminal .terminal-body{padding-bottom:26px;}
+  .contact-line{font-family:var(--mono);font-size:14px;margin-bottom:10px;}
+  .contact-line a{color:var(--accent);}
+  .contact-line a:hover{text-decoration:underline;}
+  footer{padding:30px 0 50px;text-align:center;color:var(--text-dim);font-family:var(--mono);font-size:11.5px;}
+
+  @media (max-width:640px){
+    .hero{padding:56px 0 40px;}
+    section{padding:40px 0;}
+    .terminal-body{padding:20px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="pipeline-nav">
+  <div class="pipeline-track">
+    <span class="pipeline-brand">pipeline</span>
+    <div class="stage"><a href="#about">about</a></div>
+    <div class="stage-connector"></div>
+    <div class="stage"><a href="#projects">build</a></div>
+    <div class="stage-connector"></div>
+    <div class="stage"><a href="#skills">stack</a></div>
+    <div class="stage-connector"></div>
+    <div class="stage"><a href="#contact">deploy</a></div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero" style="border-top:none;">
+    <div class="hero-eyebrow"><span class="dot"></span>STATUS: OPEN TO WORK</div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot" style="background:#FF5F56;"></div>
+        <div class="terminal-dot" style="background:#FFBD2E;"></div>
+        <div class="terminal-dot" style="background:#27C93F;"></div>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-line"><span class="prompt">hari@devops</span>:~$ <span class="cmd">whoami</span></div>
+        <h1 class="hero-name">Hari Kumar M</h1>
+        <div class="hero-role">DevOps Engineer · Bengaluru, India</div>
+        <p class="hero-desc">I build CI/CD pipelines and cloud infrastructure that ship code safely and automatically. Came up through supply chain operations before retraining into DevOps — so I care as much about the process as the tooling.</p>
+        <div class="hero-tags">
+          <span class="tag">AWS</span><span class="tag">Kubernetes</span><span class="tag">Docker</span>
+          <span class="tag">Terraform</span><span class="tag">Jenkins</span><span class="tag">GitHub Actions</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-links">
+      <a class="btn btn-primary" href="https://github.com/khari2453" target="_blank">→ view source (GitHub)</a>
+      <a class="btn btn-outline" href="https://www.linkedin.com/in/hari-kumar-a19024106/" target="_blank">LinkedIn</a>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-head"><span class="section-num">01</span><span class="section-title">about</span></div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div>
+        <div class="timeline-when">AUG 2025 — FEB 2026</div>
+        <div class="timeline-what">DevOps Engineer Intern, GUVI Geek Network Pvt. Ltd.</div>
+        <div class="timeline-detail">Completed GUVI's Advanced DevOps & Cloud Engineering Program — graded A.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="border-color:var(--text-dim);"></div>
+      <div>
+        <div class="timeline-when">EDUCATION</div>
+        <div class="timeline-what">B.Sc./B.E. Computer Science, Bangalore University</div>
+        <div class="timeline-detail">Transitioned into DevOps from a Supply Chain Management background.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head"><span class="section-num">02</span><span class="section-title">build — featured projects</span></div>
+
+    <div class="project">
+      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
+      <div class="project-title">Real-Time Log Monitoring & Alerting System</div>
+      <p class="project-desc">Centralized log pipeline with live alerting so issues surface before they become incidents.</p>
+      <div class="project-stack">
+        <span class="chip">ELK Stack</span><span class="chip">Prometheus</span><span class="chip">Grafana</span><span class="chip">Alertmanager</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
+      <div class="project-title">Trendify — Shopping App on AWS EC2</div>
+      <p class="project-desc">End-to-end deployment of a shopping application onto EC2 infrastructure, provisioned and configured for production use.</p>
+      <div class="project-stack">
+        <span class="chip">AWS EC2</span><span class="chip">Docker</span><span class="chip">Jenkins</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
+      <div class="project-title">Brain Task App — AWS EKS</div>
+      <p class="project-desc">Containerized application deployed to a managed Kubernetes cluster, built for horizontal scale.</p>
+      <div class="project-stack">
+        <span class="chip">AWS EKS</span><span class="chip">Kubernetes</span><span class="chip">Docker</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
+      <div class="project-title">Mobile Sales Catalog</div>
+      <p class="project-desc">Deployment pipeline built for a mobile-facing sales catalog application.</p>
+      <div class="project-stack">
+        <span class="chip">CI/CD</span><span class="chip">Docker</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-status building"><span class="sq"></span>BUILDING</div>
+      <div class="project-title">Boutique CI Pipeline</div>
+      <p class="project-desc">Portfolio microservices pipeline: GitHub Actions building images to ECR, with a GitOps flow driving Kubernetes deployment.</p>
+      <div class="project-stack">
+        <span class="chip">GitHub Actions</span><span class="chip">ECR</span><span class="chip">GitOps</span><span class="chip">Kubernetes</span>
+      </div>
+    </div>
+
+    <a class="project-link" href="https://github.com/khari2453?tab=repositories" target="_blank">→ all repositories on GitHub</a>
+  </section>
+
+  <section id="skills">
+    <div class="section-head"><span class="section-num">03</span><span class="section-title">stack</span></div>
+    <div class="skills-grid">
+      <div class="skill-cell"><div class="skill-cat">Cloud</div><div class="skill-items">AWS (EC2, EKS, ECR)</div></div>
+      <div class="skill-cell"><div class="skill-cat">Containers</div><div class="skill-items">Docker, Kubernetes</div></div>
+      <div class="skill-cell"><div class="skill-cat">CI/CD</div><div class="skill-items">Jenkins, GitHub Actions</div></div>
+      <div class="skill-cell"><div class="skill-cat">IaC / Config</div><div class="skill-items">Terraform, Ansible</div></div>
+      <div class="skill-cell"><div class="skill-cat">Monitoring</div><div class="skill-items">Prometheus, Grafana, ELK</div></div>
+      <div class="skill-cell"><div class="skill-cat">Code Quality</div><div class="skill-items">SonarQube</div></div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-terminal">
+    <div class="section-head"><span class="section-num">04</span><span class="section-title">deploy — get in touch</span></div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot" style="background:#FF5F56;"></div>
+        <div class="terminal-dot" style="background:#FFBD2E;"></div>
+        <div class="terminal-dot" style="background:#27C93F;"></div>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-line"><span class="prompt">hari@devops</span>:~$ <span class="cmd">cat contact.yaml</span></div>
+        <div class="contact-line">github: <a href="https://github.com/khari2453" target="_blank">github.com/khari2453</a></div>
+        <div class="contact-line">linkedin: <a href="https://www.linkedin.com/in/hari-kumar-a19024106/" target="_blank">linkedin.com/in/hari-kumar-a19024106</a></div>
+        <div class="contact-line" style="color:var(--text-dim);">email: <span style="color:var(--amber);">khari2453@gmail.com</span></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>built with git, docker &amp; a little too much coffee</footer>
+
+</body>
+</html>
