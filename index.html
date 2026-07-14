@@ -1,338 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hari Kumar M — DevOps Engineer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0D1117;
-    --bg-raised: #131A22;
-    --line: #22303C;
-    --text: #E6EDF3;
-    --text-dim: #8B98A5;
-    --pass: #3FB950;
-    --pass-dim: #1F4A2A;
-    --amber: #D29922;
-    --accent: #58A6FF;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'Inter', sans-serif;
+    --bg: #12151b;
+    --panel: #181c24;
+    --panel-2: #1e232c;
+    --line: #2a3038;
+    --text: #e7ebf1;
+    --muted: #8b93a1;
+    --green: #4ade80;
+    --green-dim: #2f9e60;
+    --amber: #f5a524;
+    --blue: #5b9df9;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
   }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
   body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--sans);
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.55;
   }
-  a{color:inherit;text-decoration:none;}
-  ::selection{background:var(--pass-dim);color:var(--pass);}
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  a{ color: inherit; }
+  .wrap{ max-width: 980px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
-  .wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
+  /* ---------- Top bar ---------- */
+  .topbar{
+    border-bottom: 1px solid var(--line);
+    background: rgba(18,21,27,0.85);
+    backdrop-filter: blur(6px);
+    position: sticky; top:0; z-index: 10;
+  }
+  .topbar-inner{
+    max-width: 980px; margin:0 auto; padding: 14px 24px;
+    display:flex; align-items:center; justify-content: space-between;
+  }
+  .brand{ font-family: var(--mono); font-size: 14px; color: var(--green); display:flex; align-items:center; gap:8px; }
+  .dot{ width:8px; height:8px; border-radius:50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
+  .nav{ display:flex; gap: 22px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .nav a:hover{ color: var(--text); }
 
-  /* ===== Pipeline Nav (signature element) ===== */
-  .pipeline-nav{
-    position:sticky;top:0;z-index:100;
-    background:rgba(13,17,23,0.92);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
+  /* ---------- Hero: status console ---------- */
+  .hero{ padding: 56px 0 40px; }
+  .console{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
   }
-  .pipeline-track{
-    display:flex;align-items:center;
-    max-width:1000px;margin:0 auto;
-    padding:14px 24px;
-    gap:0;
-    overflow-x:auto;
+  .console-head{
+    display:flex; align-items:center; gap:8px;
+    padding: 10px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
   }
-  .pipeline-brand{
-    font-family:var(--mono);font-weight:600;font-size:13px;
-    color:var(--pass);white-space:nowrap;margin-right:28px;
-    display:flex;align-items:center;gap:8px;
-  }
-  .pipeline-brand::before{content:"●";font-size:9px;animation:pulse 2s infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
-  .stage{
-    display:flex;align-items:center;white-space:nowrap;
-  }
-  .stage a{
-    font-family:var(--mono);font-size:12.5px;font-weight:500;
-    color:var(--text-dim);padding:6px 14px;border-radius:5px;
-    border:1px solid transparent;transition:all .15s ease;
-  }
-  .stage a:hover{color:var(--text);border-color:var(--line);background:var(--bg-raised);}
-  .stage-connector{width:20px;height:1px;background:var(--line);flex-shrink:0;}
+  .chip{ width:10px; height:10px; border-radius:50%; }
+  .c1{ background:#ff5f57;} .c2{ background:#febc2e;} .c3{ background:#28c840;}
+  .console-body{ padding: 28px 28px 30px; }
+  .prompt{ font-family: var(--mono); color: var(--green); font-size: 13px; margin-bottom:6px; }
+  .typed{ font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .cursor{ display:inline-block; width:7px; height:14px; background: var(--green); margin-left:2px; vertical-align: -2px; animation: blink 1s step-end infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
 
-  /* ===== Hero ===== */
-  .hero{padding:88px 0 64px;}
-  .hero-eyebrow{
-    font-family:var(--mono);font-size:12px;color:var(--pass);
-    margin-bottom:18px;display:flex;align-items:center;gap:10px;
+  .name{
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    margin: 18px 0 6px;
+    letter-spacing: -0.5px;
   }
-  .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--pass);}
-  .terminal{
-    background:var(--bg-raised);
-    border:1px solid var(--line);
-    border-radius:8px;
-    overflow:hidden;
-    box-shadow:0 20px 60px -20px rgba(0,0,0,0.5);
+  .role{ color: var(--blue); font-family: var(--mono); font-size: 15px; margin-bottom: 18px; }
+  .summary{ color: var(--muted); max-width: 620px; font-size: 15px; margin-bottom: 26px; }
+
+  .status-grid{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow:hidden;
+    margin-bottom: 22px;
   }
-  .terminal-bar{
-    display:flex;align-items:center;gap:7px;
-    padding:11px 14px;border-bottom:1px solid var(--line);
-    background:#0A0F14;
+  .status-cell{ background: var(--panel-2); padding: 14px 16px; }
+  .status-label{ font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .status-value{ font-family: var(--mono); font-size: 20px; font-weight:700; color: var(--green); }
+  .status-value.amber{ color: var(--amber); }
+  .status-value.blue{ color: var(--blue); }
+
+  .contact-row{ display:flex; flex-wrap: wrap; gap: 14px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .contact-row span{ color: var(--text); }
+  .contact-row a{ text-decoration: none; border-bottom: 1px dashed var(--line); }
+  .contact-row a:hover{ border-color: var(--green); color: var(--green); }
+
+  /* ---------- Section headers ---------- */
+  section{ padding: 40px 0; }
+  .sec-head{
+    display:flex; align-items:baseline; gap: 12px; margin-bottom: 22px;
+    font-family: var(--mono);
   }
-  .terminal-dot{width:10px;height:10px;border-radius:50%;}
-  .terminal-body{padding:26px 28px 30px;font-family:var(--mono);}
-  .terminal-line{font-size:14px;color:var(--text-dim);margin-bottom:4px;}
-  .terminal-line .prompt{color:var(--pass);}
-  .terminal-line .cmd{color:var(--text);}
-  .hero-name{
-    font-family:var(--sans);font-weight:800;
-    font-size:clamp(34px,5.5vw,52px);
-    letter-spacing:-0.02em;line-height:1.08;
-    margin:16px 0 10px;color:var(--text);
+  .sec-tag{ color: var(--green); font-size: 12px; }
+  .sec-title{ font-size: 20px; font-weight: 700; }
+  .sec-rule{ flex:1; height:1px; background: var(--line); }
+
+  /* ---------- Skills ---------- */
+  .skills-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px){ .skills-grid{ grid-template-columns: 1fr; } }
+  .skill-card{ background: var(--panel); border:1px solid var(--line); border-radius:6px; padding: 16px 18px; }
+  .skill-card h4{ margin:0 0 10px; font-family: var(--mono); font-size: 12px; color: var(--blue); text-transform: uppercase; letter-spacing: .5px; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap: 6px; }
+  .tag{ font-family: var(--mono); font-size: 11.5px; padding: 4px 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; color: var(--text); }
+
+  /* ---------- Deployment log (experience) ---------- */
+  .log{ border-left: 2px solid var(--line); padding-left: 22px; margin-left: 6px; }
+  .log-entry{ position:relative; margin-bottom: 26px; }
+  .log-entry::before{
+    content:""; position:absolute; left:-28px; top:4px; width:10px; height:10px; border-radius:50%;
+    background: var(--green); box-shadow: 0 0 0 4px rgba(74,222,128,0.15);
   }
-  .hero-role{
-    font-family:var(--mono);font-size:15px;color:var(--accent);margin-bottom:18px;
+  .log-time{ font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .log-title{ font-weight:700; font-size: 16px; margin-bottom: 2px; }
+  .log-org{ color: var(--muted); font-size: 13.5px; margin-bottom: 10px; }
+  .log-list{ margin:0; padding-left: 18px; color: var(--text); font-size: 14px; }
+  .log-list li{ margin-bottom: 7px; }
+  .log-list b{ color: var(--green); font-weight: 600; }
+
+  /* ---------- Projects ---------- */
+  .proj-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px){ .proj-grid{ grid-template-columns: 1fr; } }
+  .proj-card{ background: var(--panel); border:1px solid var(--line); border-radius:8px; padding: 20px; display:flex; flex-direction:column; }
+  .proj-status{ font-family: var(--mono); font-size: 10px; color: var(--green); display:flex; align-items:center; gap:6px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px;}
+  .proj-status .dot{ width:6px; height:6px; }
+  .proj-title{ font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  .proj-tools{ font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+  .proj-list{ margin:0; padding-left: 16px; font-size: 13.5px; color: var(--text); flex:1; }
+  .proj-list li{ margin-bottom: 6px; }
+  .proj-outcome{ margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 12.5px; color: var(--amber); font-family: var(--mono); }
+
+  /* ---------- Education / Certs ---------- */
+  .info-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px){ .info-grid{ grid-template-columns: 1fr; } }
+  .info-card{ background: var(--panel); border:1px solid var(--line); border-radius:6px; padding: 18px 20px; }
+  .info-card h4{ margin: 0 0 8px; font-family: var(--mono); font-size: 12px; color: var(--blue); text-transform: uppercase; letter-spacing: .5px; }
+  .info-card p{ margin: 0; font-size: 14px; color: var(--text); }
+  .info-card p.muted{ color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+
+  /* ---------- Footer / CTA ---------- */
+  .cta{
+    background: var(--panel); border:1px solid var(--line); border-radius: 8px;
+    padding: 30px; text-align:center; margin: 20px 0 60px;
   }
-  .hero-desc{max-width:560px;color:var(--text-dim);font-size:15px;margin-bottom:22px;}
-  .hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-  .tag{
-    font-family:var(--mono);font-size:11.5px;color:var(--text-dim);
-    border:1px solid var(--line);padding:4px 10px;border-radius:4px;
-  }
-  .hero-links{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
+  .cta h3{ font-family: var(--mono); margin: 0 0 8px; font-size: 18px; }
+  .cta p{ color: var(--muted); margin: 0 0 18px; font-size: 14px; }
+  .btn-row{ display:flex; gap: 12px; justify-content:center; flex-wrap: wrap; }
   .btn{
-    font-family:var(--mono);font-size:13px;font-weight:500;
-    padding:10px 18px;border-radius:6px;transition:all .15s ease;
-    display:inline-flex;align-items:center;gap:8px;
+    font-family: var(--mono); font-size: 13px; padding: 10px 18px; border-radius: 6px;
+    text-decoration:none; border: 1px solid var(--line); transition: all .15s ease;
   }
-  .btn-primary{background:var(--pass);color:#031B08;}
-  .btn-primary:hover{background:#4fd964;}
-  .btn-outline{border:1px solid var(--line);color:var(--text);}
-  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.primary{ background: var(--green); color: #0c1310; border-color: var(--green); font-weight:700; }
+  .btn.primary:hover{ box-shadow: 0 0 20px rgba(74,222,128,0.35); }
+  .btn.secondary{ color: var(--text); }
+  .btn.secondary:hover{ border-color: var(--blue); color: var(--blue); }
 
-  /* ===== Section shared ===== */
-  section{padding:56px 0;border-top:1px solid var(--line);}
-  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:32px;}
-  .section-num{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
-  .section-title{font-size:22px;font-weight:700;letter-spacing:-0.01em;}
-
-  /* ===== Projects as pipeline-stage cards ===== */
-  .project{
-    background:var(--bg-raised);border:1px solid var(--line);
-    border-radius:8px;padding:24px 26px;margin-bottom:16px;
-    position:relative;transition:border-color .15s ease;
-  }
-  .project:hover{border-color:#324457;}
-  .project-status{
-    display:flex;align-items:center;gap:8px;margin-bottom:10px;
-    font-family:var(--mono);font-size:11px;color:var(--pass);
-  }
-  .project-status .sq{width:8px;height:8px;background:var(--pass);border-radius:2px;}
-  .project-status.building{color:var(--amber);}
-  .project-status.building .sq{background:var(--amber);}
-  .project-title{font-size:17px;font-weight:700;margin-bottom:8px;}
-  .project-desc{color:var(--text-dim);font-size:14px;margin-bottom:14px;}
-  .project-stack{display:flex;flex-wrap:wrap;gap:6px;}
-  .chip{
-    font-family:var(--mono);font-size:11px;color:var(--accent);
-    background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.2);
-    padding:3px 9px;border-radius:4px;
-  }
-  .project-link{
-    margin-top:14px;display:inline-block;font-family:var(--mono);
-    font-size:12px;color:var(--text-dim);border-bottom:1px solid var(--line);
-  }
-  .project-link:hover{color:var(--accent);border-color:var(--accent);}
-
-  /* ===== Skills ===== */
-  .skills-grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;
-  }
-  .skill-cell{
-    background:var(--bg-raised);padding:16px;
-  }
-  .skill-cat{font-family:var(--mono);font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
-  .skill-items{font-size:13.5px;color:var(--text);}
-
-  /* ===== About / timeline ===== */
-  .timeline-item{display:flex;gap:20px;padding-bottom:22px;position:relative;}
-  .timeline-item:not(:last-child)::before{
-    content:"";position:absolute;left:5px;top:16px;bottom:0;width:1px;background:var(--line);
-  }
-  .timeline-dot{
-    width:11px;height:11px;border-radius:50%;background:var(--bg);
-    border:2px solid var(--pass);flex-shrink:0;margin-top:4px;
-  }
-  .timeline-when{font-family:var(--mono);font-size:11.5px;color:var(--pass);margin-bottom:4px;}
-  .timeline-what{font-weight:600;font-size:14.5px;margin-bottom:3px;}
-  .timeline-detail{font-size:13.5px;color:var(--text-dim);}
-
-  /* ===== Contact / footer ===== */
-  .contact-terminal .terminal-body{padding-bottom:26px;}
-  .contact-line{font-family:var(--mono);font-size:14px;margin-bottom:10px;}
-  .contact-line a{color:var(--accent);}
-  .contact-line a:hover{text-decoration:underline;}
-  footer{padding:30px 0 50px;text-align:center;color:var(--text-dim);font-family:var(--mono);font-size:11.5px;}
-
-  @media (max-width:640px){
-    .hero{padding:56px 0 40px;}
-    section{padding:40px 0;}
-    .terminal-body{padding:20px;}
-  }
+  footer{ text-align:center; padding: 20px 0 40px; color: var(--muted); font-family: var(--mono); font-size: 11px; }
 </style>
 </head>
 <body>
 
-<nav class="pipeline-nav">
-  <div class="pipeline-track">
-    <span class="pipeline-brand">pipeline</span>
-    <div class="stage"><a href="#about">about</a></div>
-    <div class="stage-connector"></div>
-    <div class="stage"><a href="#projects">build</a></div>
-    <div class="stage-connector"></div>
-    <div class="stage"><a href="#skills">stack</a></div>
-    <div class="stage-connector"></div>
-    <div class="stage"><a href="#contact">deploy</a></div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot"></span> status: available</div>
+      <nav class="nav">
+        <a href="#experience">experience</a>
+        <a href="#projects">projects</a>
+        <a href="#skills">stack</a>
+        <a href="#contact">contact</a>
+      </nav>
+    </div>
   </div>
-</nav>
 
-<div class="wrap">
+  <div class="wrap">
+    <section class="hero">
+      <div class="console">
+        <div class="console-head">
+          <span class="chip c1"></span><span class="chip c2"></span><span class="chip c3"></span>
+          <span style="margin-left:8px;">whoami.sh — bash — 80x24</span>
+        </div>
+        <div class="console-body">
+          <div class="prompt">hari@bengaluru:~$ whoami</div>
+          <div class="typed" id="typedline"></div>
 
-  <section class="hero" style="border-top:none;">
-    <div class="hero-eyebrow"><span class="dot"></span>STATUS: OPEN TO WORK</div>
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="terminal-dot" style="background:#FF5F56;"></div>
-        <div class="terminal-dot" style="background:#FFBD2E;"></div>
-        <div class="terminal-dot" style="background:#27C93F;"></div>
-      </div>
-      <div class="terminal-body">
-        <div class="terminal-line"><span class="prompt">hari@devops</span>:~$ <span class="cmd">whoami</span></div>
-        <h1 class="hero-name">Hari Kumar M</h1>
-        <div class="hero-role">DevOps Engineer · Bengaluru, India</div>
-        <p class="hero-desc">I build CI/CD pipelines and cloud infrastructure that ship code safely and automatically. Came up through supply chain operations before retraining into DevOps — so I care as much about the process as the tooling.</p>
-        <div class="hero-tags">
-          <span class="tag">AWS</span><span class="tag">Kubernetes</span><span class="tag">Docker</span>
-          <span class="tag">Terraform</span><span class="tag">Jenkins</span><span class="tag">GitHub Actions</span>
+          <h1 class="name">Hari Kumar M</h1>
+          <div class="role">// DevOps Engineer — CI/CD · Cloud Infra · Observability</div>
+          <p class="summary">Detail-oriented DevOps Engineer building production-ready CI/CD pipelines, automating cloud infrastructure on AWS EKS, and standing up real-time observability with Prometheus and the ELK stack. Strong foundation in Linux administration, IaC with Terraform, and DevSecOps practices.</p>
+
+          <div class="status-grid">
+            <div class="status-cell">
+              <div class="status-label">Deploy time cut</div>
+              <div class="status-value">55%</div>
+            </div>
+            <div class="status-cell">
+              <div class="status-label">Env consistency</div>
+              <div class="status-value">99.9%</div>
+            </div>
+            <div class="status-cell">
+              <div class="status-label">MTTD</div>
+              <div class="status-value amber">&lt;5 min</div>
+            </div>
+            <div class="status-cell">
+              <div class="status-label">Availability</div>
+              <div class="status-value blue">Immediate</div>
+            </div>
+          </div>
+
+          <div class="contact-row">
+            <span>📍 Bengaluru, India</span>
+            <a href="tel:+918147445549">+91 81474 45549</a>
+            <a href="mailto:khari2453@gmail.com">khari2453@gmail.com</a>
+            <a href="https://linkedin.com/in/hari-kumar-a19024106" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://github.com/khari2453" target="_blank" rel="noopener">GitHub</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="hero-links">
-      <a class="btn btn-primary" href="https://github.com/khari2453" target="_blank">→ view source (GitHub)</a>
-      <a class="btn btn-outline" href="https://www.linkedin.com/in/hari-kumar-a19024106/" target="_blank">LinkedIn</a>
-    </div>
-  </section>
+    </section>
 
-  <section id="about">
-    <div class="section-head"><span class="section-num">01</span><span class="section-title">about</span></div>
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div>
-        <div class="timeline-when">AUG 2025 — FEB 2026</div>
-        <div class="timeline-what">DevOps Engineer Intern, GUVI Geek Network Pvt. Ltd.</div>
-        <div class="timeline-detail">Completed GUVI's Advanced DevOps & Cloud Engineering Program — graded A.</div>
+    <section id="skills">
+      <div class="sec-head"><span class="sec-tag">01</span><span class="sec-title">Stack</span><div class="sec-rule"></div></div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h4>Cloud &amp; Infra</h4>
+          <div class="tag-row">
+            <span class="tag">AWS EC2</span><span class="tag">EKS</span><span class="tag">ECR</span>
+            <span class="tag">RDS</span><span class="tag">S3</span><span class="tag">IAM</span>
+            <span class="tag">CloudWatch</span><span class="tag">Route53</span><span class="tag">Linux</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h4>Infrastructure as Code</h4>
+          <div class="tag-row"><span class="tag">Terraform</span><span class="tag">Ansible</span></div>
+        </div>
+        <div class="skill-card">
+          <h4>CI/CD &amp; Automation</h4>
+          <div class="tag-row">
+            <span class="tag">Jenkins</span><span class="tag">GitHub Actions</span>
+            <span class="tag">CodePipeline</span><span class="tag">CodeBuild</span><span class="tag">CodeDeploy</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h4>Containers &amp; Orchestration</h4>
+          <div class="tag-row"><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">Docker Compose</span></div>
+        </div>
+        <div class="skill-card">
+          <h4>Monitoring &amp; Logging</h4>
+          <div class="tag-row">
+            <span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">ELK Stack</span><span class="tag">Uptime Kuma</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h4>Build, Quality &amp; Scripting</h4>
+          <div class="tag-row">
+            <span class="tag">Maven</span><span class="tag">SonarQube</span><span class="tag">Git</span><span class="tag">Bash</span><span class="tag">Python</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot" style="border-color:var(--text-dim);"></div>
-      <div>
-        <div class="timeline-when">EDUCATION</div>
-        <div class="timeline-what">B.Sc./B.E. Computer Science, Bangalore University</div>
-        <div class="timeline-detail">Transitioned into DevOps from a Supply Chain Management background.</div>
+    </section>
+
+    <section id="experience">
+      <div class="sec-head"><span class="sec-tag">02</span><span class="sec-title">Experience</span><div class="sec-rule"></div></div>
+      <div class="log">
+        <div class="log-entry">
+          <div class="log-time">AUG 2025 — FEB 2026</div>
+          <div class="log-title">DevOps Engineer Intern</div>
+          <div class="log-org">GUVI Geek Network Pvt. Ltd.</div>
+          <ul class="log-list">
+            <li>Designed and maintained 5+ end-to-end CI/CD pipelines using <b>Jenkins &amp; GitHub Actions</b>, cutting manual deployment time by <b>55%</b>.</li>
+            <li>Containerized microservices with <b>Docker</b> and ran workloads on <b>AWS EKS</b>, holding <b>99.9%</b> environment consistency.</li>
+            <li>Wrote modular <b>Terraform</b> manifests for VPCs, EKS clusters, and S3 — spin-up time down from hours to <b>15 minutes</b>.</li>
+            <li>Built alert routing with <b>Prometheus, Grafana &amp; Uptime Kuma</b>, dropping MTTD on cluster errors to <b>under 5 minutes</b>.</li>
+            <li>Wired <b>SonarQube</b> static analysis directly into active Jenkins pipelines.</li>
+            <li>Handled Linux ops — SSH key management, firewall hardening, cron-driven Bash automation.</li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="projects">
-    <div class="section-head"><span class="section-num">02</span><span class="section-title">build — featured projects</span></div>
+    <section id="projects">
+      <div class="sec-head"><span class="sec-tag">03</span><span class="sec-title">Projects</span><div class="sec-rule"></div></div>
+      <div class="proj-grid">
+        <div class="proj-card">
+          <div class="proj-status"><span class="dot"></span> deployed</div>
+          <div class="proj-title">Real-Time Log Monitoring &amp; Alerting System</div>
+          <div class="proj-tools">Prometheus · Grafana · ELK · Bash · CloudWatch</div>
+          <ul class="proj-list">
+            <li>Centralized log ingestion with Logstash into Elasticsearch.</li>
+            <li>Custom Grafana dashboards for metrics, traffic spikes, performance.</li>
+            <li>Prometheus threshold rules routed via Alertmanager to Slack/Discord/email.</li>
+          </ul>
+          <div class="proj-outcome">→ Troubleshooting time cut 40%</div>
+        </div>
 
-    <div class="project">
-      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
-      <div class="project-title">Real-Time Log Monitoring & Alerting System</div>
-      <p class="project-desc">Centralized log pipeline with live alerting so issues surface before they become incidents.</p>
-      <div class="project-stack">
-        <span class="chip">ELK Stack</span><span class="chip">Prometheus</span><span class="chip">Grafana</span><span class="chip">Alertmanager</span>
+        <div class="proj-card">
+          <div class="proj-status"><span class="dot"></span> deployed</div>
+          <div class="proj-title">Trendify E-Commerce Deployment</div>
+          <div class="proj-tools">Jenkins · Docker · K8s (EKS) · Prometheus</div>
+          <ul class="proj-list">
+            <li>Multi-stage Dockerfiles for React app, image size under 100MB.</li>
+            <li>Multi-branch Jenkins pipeline auto-building on dev/main merges.</li>
+            <li>K8s manifests for zero-downtime rolling updates.</li>
+          </ul>
+          <div class="proj-outcome">→ Fully hands-off deploy: commit to monitored prod</div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-status"><span class="dot"></span> deployed</div>
+          <div class="proj-title">Brain Task App — AWS Cloud-Native Pipeline</div>
+          <div class="proj-tools">EKS · ECR · CodePipeline · CodeDeploy · CloudWatch</div>
+          <ul class="proj-list">
+            <li>Cloud-native release flow via CodePipeline, CodeBuild, CodeDeploy.</li>
+            <li>Private ECR image hosting, deployed to active EKS cluster.</li>
+            <li>CloudWatch log groups for container monitoring &amp; failure alerts.</li>
+          </ul>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-status"><span class="dot"></span> deployed</div>
+          <div class="proj-title">Mobile Sales Catalog</div>
+          <div class="proj-tools">Jenkins · Docker · AWS EC2 · Bash</div>
+          <ul class="proj-list">
+            <li>Structured Git/GitHub dev-main branch workflow.</li>
+            <li>Automated build.sh / deploy.sh scripts wired into Jenkins.</li>
+            <li>Hosted on EC2 with Docker Hub image management.</li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="project">
-      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
-      <div class="project-title">Trendify — Shopping App on AWS EC2</div>
-      <p class="project-desc">End-to-end deployment of a shopping application onto EC2 infrastructure, provisioned and configured for production use.</p>
-      <div class="project-stack">
-        <span class="chip">AWS EC2</span><span class="chip">Docker</span><span class="chip">Jenkins</span>
+    <section>
+      <div class="sec-head"><span class="sec-tag">04</span><span class="sec-title">Education &amp; Certification</span><div class="sec-rule"></div></div>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Education</h4>
+          <p>Bachelor of Computer Science — Bangalore University</p>
+          <p class="muted">2016 – 2019 · GPA 7.68/10</p>
+        </div>
+        <div class="info-card">
+          <h4>Certification</h4>
+          <p>Advanced DevOps &amp; Cloud Engineering Program — GUVI</p>
+          <p class="muted">Grade A · Certified Nov 2025</p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="project">
-      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
-      <div class="project-title">Brain Task App — AWS EKS</div>
-      <p class="project-desc">Containerized application deployed to a managed Kubernetes cluster, built for horizontal scale.</p>
-      <div class="project-stack">
-        <span class="chip">AWS EKS</span><span class="chip">Kubernetes</span><span class="chip">Docker</span>
+    <section id="contact">
+      <div class="cta">
+        <h3>&gt; ready_to_deploy --role="DevOps Engineer"</h3>
+        <p>Immediate joiner · Open to Full-Time, Contract &amp; Hybrid/Remote roles in Bengaluru</p>
+        <div class="btn-row">
+          <a class="btn primary" href="mailto:khari2453@gmail.com">Email me</a>
+          <a class="btn secondary" href="https://linkedin.com/in/hari-kumar-a19024106" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn secondary" href="https://github.com/khari2453" target="_blank" rel="noopener">GitHub</a>
+        </div>
       </div>
-    </div>
+    </section>
+  </div>
 
-    <div class="project">
-      <div class="project-status"><span class="sq"></span>DEPLOYED</div>
-      <div class="project-title">Mobile Sales Catalog</div>
-      <p class="project-desc">Deployment pipeline built for a mobile-facing sales catalog application.</p>
-      <div class="project-stack">
-        <span class="chip">CI/CD</span><span class="chip">Docker</span>
-      </div>
-    </div>
+  <footer>Bengaluru, India · English / Kannada / Tamil</footer>
 
-    <div class="project">
-      <div class="project-status building"><span class="sq"></span>BUILDING</div>
-      <div class="project-title">Boutique CI Pipeline</div>
-      <p class="project-desc">Portfolio microservices pipeline: GitHub Actions building images to ECR, with a GitOps flow driving Kubernetes deployment.</p>
-      <div class="project-stack">
-        <span class="chip">GitHub Actions</span><span class="chip">ECR</span><span class="chip">GitOps</span><span class="chip">Kubernetes</span>
-      </div>
-    </div>
-
-    <a class="project-link" href="https://github.com/khari2453?tab=repositories" target="_blank">→ all repositories on GitHub</a>
-  </section>
-
-  <section id="skills">
-    <div class="section-head"><span class="section-num">03</span><span class="section-title">stack</span></div>
-    <div class="skills-grid">
-      <div class="skill-cell"><div class="skill-cat">Cloud</div><div class="skill-items">AWS (EC2, EKS, ECR)</div></div>
-      <div class="skill-cell"><div class="skill-cat">Containers</div><div class="skill-items">Docker, Kubernetes</div></div>
-      <div class="skill-cell"><div class="skill-cat">CI/CD</div><div class="skill-items">Jenkins, GitHub Actions</div></div>
-      <div class="skill-cell"><div class="skill-cat">IaC / Config</div><div class="skill-items">Terraform, Ansible</div></div>
-      <div class="skill-cell"><div class="skill-cat">Monitoring</div><div class="skill-items">Prometheus, Grafana, ELK</div></div>
-      <div class="skill-cell"><div class="skill-cat">Code Quality</div><div class="skill-items">SonarQube</div></div>
-    </div>
-  </section>
-
-  <section id="contact" class="contact-terminal">
-    <div class="section-head"><span class="section-num">04</span><span class="section-title">deploy — get in touch</span></div>
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="terminal-dot" style="background:#FF5F56;"></div>
-        <div class="terminal-dot" style="background:#FFBD2E;"></div>
-        <div class="terminal-dot" style="background:#27C93F;"></div>
-      </div>
-      <div class="terminal-body">
-        <div class="terminal-line"><span class="prompt">hari@devops</span>:~$ <span class="cmd">cat contact.yaml</span></div>
-        <div class="contact-line">github: <a href="https://github.com/khari2453" target="_blank">github.com/khari2453</a></div>
-        <div class="contact-line">linkedin: <a href="https://www.linkedin.com/in/hari-kumar-a19024106/" target="_blank">linkedin.com/in/hari-kumar-a19024106</a></div>
-        <div class="contact-line" style="color:var(--text-dim);">email: <span style="color:var(--amber);">khari2453@gmail.com</span></div>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<footer>built with git, docker &amp; a little too much coffee</footer>
-
+<script>
+  const line = "DevOps Engineer — building pipelines that don't wake anyone up at 3am.";
+  const el = document.getElementById('typedline');
+  let i = 0;
+  function type(){
+    if(i <= line.length){
+      el.innerHTML = line.slice(0, i) + '<span class="cursor"></span>';
+      i++;
+      setTimeout(type, 28);
+    } else {
+      el.innerHTML = line + '<span class="cursor"></span>';
+    }
+  }
+  type();
+</script>
 </body>
 </html>
